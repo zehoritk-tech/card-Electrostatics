@@ -1,254 +1,481 @@
 <!DOCTYPE html>
+
 <html lang="he">
+
 <head>
+
 <meta charset="UTF-8">
-<title>מתרעננים באלקטרוסטטיקה</title>
+
+<title>משחק
+
+קלפים לכיתה</title>
+
+ 
 
 <style>
+
 body{
+
   font-family: Arial;
+
   direction: rtl;
+
   text-align: center;
-  background:#f5f5f5;
+
+ background:linear-gradient(135deg, #f6f9ff, #e6ecff);
+
 }
+
+ 
 
 h2{margin:15px;}
 
+ 
+
 .grid{
+
   display:grid;
-  grid-template-columns: repeat(5, 1fr);
+
+  grid-template-columns:
+
+repeat(5, 1fr);
+
   gap:10px;
+
   max-width:900px;
+
   margin:20px auto;
+
 }
+
+ 
 
 .card{
+
   width:100%;
+
   aspect-ratio: 3/4;
+
   perspective:1000px;
+
 }
+
+ 
 
 .inner{
+
   width:100%;
+
   height:100%;
+
   position:relative;
+
   transform-style:preserve-3d;
+
   transition: transform 0.6s;
+
   cursor:pointer;
+
 }
+
+ 
 
 .card.flipped .inner{
+
   transform: rotateY(180deg);
+
 }
+
+ 
 
 .face{
+
   position:absolute;
+
   width:100%;
+
   height:100%;
+
   backface-visibility:hidden;
+
   border-radius:10px;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   padding:10px;
+
   box-sizing:border-box;
+
+  border: 1px solid black;
+
 }
+
+ 
 
 .front{
-  background:#ddd;
+
+ background:linear-gradient(135deg, #fff5f7, #e6b7c3);
+
   font-size:18px;
+
 }
 
-/* המחלקה החדשה לקלף שביקרו בו */
-.visited-front {
-  background: #bbb !important;
-}
+ 
 
 .back{
+
   background:white;
+
   transform: rotateY(180deg);
+
   flex-direction:column;
+
 }
+
+ 
 
 .back img{
+
   max-width:100%;
+
   max-height:70%;
+
   border-radius:8px;
+
   cursor: zoom-in;
+
 }
+
+ 
 
 .back .text{
+
   margin-top:10px;
+
   font-size:14px;
+
 }
 
-#editor{
-  margin-top:20px;
-  background:white;
-  padding:10px;
-}
-
-input[type="text"]{
-  width:90%;
-  padding:6px;
-  margin:5px;
-}
+ 
 
 #modal{
+
   display:none;
+
   position:fixed;
+
   top:0;
+
   left:0;
+
   width:100%;
+
   height:100%;
+
   background:rgba(0,0,0,0.9);
+
   justify-content:center;
+
   align-items:center;
+
   z-index:999;
+
 }
 
+ 
+
 #modal img{
+
   max-width:95%;
+
   max-height:95%;
+
   border-radius:10px;
+
 }
 
 </style>
+
 </head>
+
+ 
 
 <body>
 
-<h2>מתרעננים באלקטרוסטטיקה בעזרת תמונות</h2>
+ 
 
-<div id="game" class="grid"></div>
+<h2>מתרעננים
 
-<div id="editor"></div>
+באלקטרוסטטיקה</h2>
 
-<div id="modal" onclick="closeModal()">
-  <img id="modalImg">
+ 
+
+<div id="game"
+
+class="grid"></div>
+
+ 
+
+<div id="modal"
+
+onclick="closeModal()">
+
+  <img
+
+id="modalImg">
+
 </div>
+
+ 
 
 <script>
 
-const MAX = 10;
+ 
 
-let cards = JSON.parse(localStorage.getItem("cards")) || Array.from({length: MAX}, () => ({
-  image:"",
-  text:""
-}));
+const cards = [
 
-function save(){
-  localStorage.setItem("cards", JSON.stringify(cards));
-}
+  {
 
-function isTeacherMode(){
-  const params = new URLSearchParams(window.location.search);
-  return params.get("teacher") === "1";
-}
+    image:
 
-function buildEditor(){
-  const editor = document.getElementById("editor");
-  editor.innerHTML = "<h3>עריכת קלפים</h3>";
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/1.png",
 
-  cards.forEach((c,i)=>{
-    editor.innerHTML += `
-      <div>
-        <b>קלף ${i+1}</b><br>
-        <input type="text" placeholder="טקסט" value="${c.text}"
-          onchange="cards[${i}].text=this.value;save()">
-        <br>
-        <input type="file" onchange="loadImage(event,${i})">
-      </div>
-      <hr>
-    `;
-  });
-}
+    text: "מתרעננים
 
-function loadImage(event,i){
-  let reader = new FileReader();
-  reader.onload = function(){
-    cards[i].image = reader.result;
-    save();
-    buildEditor();
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
+באלקטרוסטטיקה"
 
-let openedCard = null;
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/2.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/3.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/4.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/5.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/6.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/7.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/8.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/9.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  },
+
+  {
+
+    image:
+
+"https://raw.githubusercontent.com/zehoritk-tech/card-game2/main/images/10.png",
+
+    text: "מתרעננים
+
+באלקטרוסטטיקה"
+
+  }
+
+];
+
+ 
 
 function buildGame(){
-  const game = document.getElementById("game");
-  game.innerHTML = "";
 
-  let order = [...cards.keys()];
-  for(let i=order.length-1;i>0;i--){
-    let j=Math.floor(Math.random()*(i+1));
-    [order[i],order[j]]=[order[j],order[i]];
+  const game =
+
+document.getElementById("game");
+
+  game.innerHTML =
+
+"";
+
+ 
+
+  let order =
+
+[...cards.keys()];
+
+  for(let
+
+i=order.length-1;i>0;i--){
+
+    let
+
+j=Math.floor(Math.random()*(i+1));
+
+   [order[i],order[j]]=[order[j],order[i]];
+
   }
+
+ 
 
   order.forEach(i=>{
+
     let c = cards[i];
 
-    let card = document.createElement("div");
-    card.className="card";
+ 
+
+    let card =
+
+document.createElement("div");
+
+   card.className="card";
+
+ 
 
     card.innerHTML = `
-      <div class="inner">
-        <div class="face front"><strong>לחצו כדי להפוך</strong></div>
-        <div class="face back">
-          <img src="${c.image}" onclick="openModal(event,'${c.image}')">
-          <div class="text">${c.text}</div>
+
+      <div
+
+class="inner"
+
+onclick="this.parentElement.classList.toggle('flipped')">
+
+        <div
+
+class="face front"><b>לחצו כדי להפוך</b></div>
+
+        <div
+
+class="face back">
+
+          <img
+
+src="${c.image}"
+
+onclick="openModal(event,'${c.image}')">
+
+          <div
+
+class="text">${c.text}</div>
+
         </div>
+
       </div>
+
     `;
 
-    card.addEventListener("click", ()=>handleCard(card));
+ 
 
-    game.appendChild(card);
+   game.appendChild(card);
+
   });
+
 }
 
-function handleCard(card){
-
-  // אם לוחצים שוב על אותו קלף פתוח - סוגרים אותו והופכים את החזית לאפורה
-  if(openedCard === card){
-    card.classList.remove("flipped");
-    const front = card.querySelector('.front');
-    front.classList.add('visited-front'); // הופך לאפור
-    openedCard = null;
-    return;
-  }
-
-  // אם כבר יש קלף פתוח אחר, לא מאפשרים לפתוח קלף נוסף
-  if(openedCard !== null){
-    return;
-  }
-
-  // פתיחת קלף
-  card.classList.add("flipped");
-  openedCard = card;
-}
+ 
 
 function openModal(event,src){
+
   event.stopPropagation();
-  document.getElementById("modal").style.display="flex";
-  document.getElementById("modalImg").src=src;
+
+ document.getElementById("modal").style.display="flex";
+
+ document.getElementById("modalImg").src=src;
+
 }
 
+ 
+
 function closeModal(){
-  document.getElementById("modal").style.display="none";
+
+ document.getElementById("modal").style.display="none";
+
 }
+
+ 
 
 buildGame();
 
-if(isTeacherMode()){
-  document.getElementById("editor").style.display="block";
-  buildEditor();
-} else {
-  document.getElementById("editor").style.display="none";
-}
+ 
 
 </script>
 
+ 
+
 </body>
+
 </html>
