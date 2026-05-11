@@ -2,7 +2,7 @@
 <html lang="he">
 <head>
 <meta charset="UTF-8">
-<title>משחק קלפים משופר</title>
+<title>משחק קלפים</title>
 
 <style>
 body{
@@ -52,12 +52,12 @@ h2{margin:15px; color: #333;}
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:10px;
+  padding:15px;
   box-sizing:border-box;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* עיצוב הצד הקדמי - ברירת מחדל */
+/* צד קדמי - אדום מדורג */
 .front{
   background: linear-gradient(135deg, #ff4b2b, #ff416c);
   color: white;
@@ -65,7 +65,7 @@ h2{margin:15px; color: #333;}
   font-weight: bold;
 }
 
-/* עיצוב קלף שכבר ביקרו בו */
+/* קלף שנסגר הופך לאפור */
 .card.visited .front {
   background: #bdc3c7 !important;
   color: #7f8c8d;
@@ -87,7 +87,7 @@ h2{margin:15px; color: #333;}
 
 .back .text{
   margin-top:10px;
-  font-size:16px;
+  font-size: 16px;
   color: #333;
 }
 
@@ -122,7 +122,7 @@ h2{margin:15px; color: #333;}
 <body>
 
 <h2>משחק קלפים</h2>
-<p>פתחו קלף אחד בכל פעם. יש לסגור קלף כדי לפתוח אחד חדש.</p>
+<p>פתחו קלף אחד בכל פעם. יש לסגור קלף כדי שתוכלו לפתוח אחר.</p>
 
 <div id="game" class="grid"></div>
 
@@ -183,7 +183,6 @@ function buildGame(){
   game.innerHTML = "";
 
   let order = [...cards.keys()];
-  // ערבוב
   for(let i=order.length-1;i>0;i--){
     let j=Math.floor(Math.random()*(i+1));
     [order[i],order[j]]=[order[j],order[i]];
@@ -196,10 +195,10 @@ function buildGame(){
 
     card.innerHTML = `
       <div class="inner">
-        <div class="face front">?</div>
+        <div class="face front">לחצו כדי להפוך</div>
         <div class="face back">
           ${c.image ? `<img src="${c.image}" onclick="openModal(event,'${c.image}')">` : ''}
-          <div class="text">${c.text || '(ריק)'}</div>
+          <div class="text">${c.text || ''}</div>
         </div>
       </div>
     `;
@@ -210,20 +209,20 @@ function buildGame(){
 }
 
 function handleCard(card){
-  // 1. אם לוחצים על הקלף שכבר פתוח - סוגרים אותו וצובעים באפור
+  // אם לוחצים על הקלף הפתוח - סוגרים אותו וצובעים באפור
   if(openedCard === card){
     card.classList.remove("flipped");
-    card.classList.add("visited"); // הופך לאפור
+    card.classList.add("visited"); 
     openedCard = null;
     return;
   }
 
-  // 2. אם מנסים לפתוח קלף חדש כשיש אחד פתוח - חוסמים
+  // חסימת פתיחת קלף חדש אם יש אחד פתוח
   if(openedCard !== null){
     return; 
   }
 
-  // 3. פתיחת קלף
+  // פתיחת הקלף
   card.classList.add("flipped");
   openedCard = card;
 }
@@ -238,7 +237,6 @@ function closeModal(){
   document.getElementById("modal").style.display="none";
 }
 
-// הפעלה
 buildGame();
 
 if(isTeacherMode()){
