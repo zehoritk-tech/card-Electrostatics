@@ -5,6 +5,7 @@
 <title>משחק קלפים לכיתה</title>
 
 <style>
+
 body{
   font-family: Arial;
   direction: rtl;
@@ -12,7 +13,9 @@ body{
   background:linear-gradient(135deg, #f6f9ff, #e6ecff);
 }
 
-h2{margin:15px;}
+h2{
+  margin:15px;
+}
 
 .grid{
   display:grid;
@@ -52,7 +55,7 @@ h2{margin:15px;}
   justify-content:center;
   padding:10px;
   box-sizing:border-box;
-  border: 1px solid black;
+  border:1px solid black;
 }
 
 .front{
@@ -70,12 +73,18 @@ h2{margin:15px;}
   max-width:100%;
   max-height:70%;
   border-radius:8px;
-  cursor: zoom-in;
+  cursor:zoom-in;
 }
 
 .back .text{
   margin-top:10px;
   font-size:14px;
+}
+
+/* קלף שכבר נסגר */
+.card.used .front{
+  background:#999;
+  color:white;
 }
 
 #modal{
@@ -96,6 +105,7 @@ h2{margin:15px;}
   max-height:95%;
   border-radius:10px;
 }
+
 </style>
 </head>
 
@@ -154,44 +164,92 @@ const cards = [
   }
 ];
 
+let openCard = null;
+
 function buildGame(){
+
   const game = document.getElementById("game");
   game.innerHTML = "";
 
   let order = [...cards.keys()];
-  for(let i=order.length-1;i>0;i--){
-    let j=Math.floor(Math.random()*(i+1));
-    [order[i],order[j]]=[order[j],order[i]];
+
+  // ערבוב קלפים
+  for(let i = order.length - 1; i > 0; i--){
+
+    let j = Math.floor(Math.random() * (i + 1));
+
+    [order[i], order[j]] = [order[j], order[i]];
   }
 
-  order.forEach(i=>{
+  order.forEach(i => {
+
     let c = cards[i];
 
     let card = document.createElement("div");
-    card.className="card";
+    card.className = "card";
 
     card.innerHTML = `
-      <div class="inner" onclick="this.parentElement.classList.toggle('flipped')">
-        <div class="face front"><b>לחצו כדי להפוך</b></div>
+      <div class="inner">
+
+        <div class="face front">
+          <b>לחצו כדי להפוך</b>
+        </div>
+
         <div class="face back">
           <img src="${c.image}" onclick="openModal(event,'${c.image}')">
-          <div class="text">${c.text}</div>
+
+          <div class="text">
+            ${c.text}
+          </div>
         </div>
+
       </div>
     `;
+
+    card.addEventListener("click", () => toggleCard(card));
 
     game.appendChild(card);
   });
 }
 
-function openModal(event,src){
+function toggleCard(card){
+
+  // אם יש כבר קלף פתוח אחר
+  if(openCard && openCard !== card){
+    return;
+  }
+
+  // אם הקלף פתוח → סוגרים ומאפירים
+  if(card.classList.contains("flipped")){
+
+    card.classList.remove("flipped");
+
+    card.classList.add("used");
+
+    openCard = null;
+  }
+
+  // אחרת פותחים אותו
+  else{
+
+    card.classList.add("flipped");
+
+    openCard = card;
+  }
+}
+
+function openModal(event, src){
+
   event.stopPropagation();
-  document.getElementById("modal").style.display="flex";
-  document.getElementById("modalImg").src=src;
+
+  document.getElementById("modal").style.display = "flex";
+
+  document.getElementById("modalImg").src = src;
 }
 
 function closeModal(){
-  document.getElementById("modal").style.display="none";
+
+  document.getElementById("modal").style.display = "none";
 }
 
 buildGame();
